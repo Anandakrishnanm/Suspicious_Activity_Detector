@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suspicious Activity Report</title>
+    <style>
+        /* Body styling */
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #2c3e50, #4ca1af);
+            color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Page title */
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #f4f4f9;
+            text-align: center;
+        }
+
+        /* Button styling */
+        .button {
+            background-color: #e74c3c;
+            color: #f4f4f9;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-bottom: 20px;
+            text-decoration: none;
+        }
+
+        .button:hover {
+            background-color: #c0392b;
+        }
+
+        /* Table styling */
+        table {
+            width: 80%;
+            max-width: 800px;
+            border-collapse: collapse;
+            background-color: #f4f4f9;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #34495e;
+            color: #f4f4f9;
+            font-size: 1.2rem;
+        }
+
+        td {
+            color: #2c3e50;
+            font-size: 1rem;
+        }
+
+        tr:nth-child(even) {
+            background-color: #ecf0f1;
+        }
+
+        /* Animation for rows */
+        tr {
+            opacity: 0;
+            animation: fadeIn 0.5s ease-in forwards;
+        }
+
+        tr:nth-child(even) {
+            animation-delay: 0.2s;
+        }
+
+        tr:nth-child(odd) {
+            animation-delay: 0.4s;
+        }
+
+        /* Animation keyframes */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Suspicious Activity Report</h1>
+
+    <!-- Button to go to the detector page -->
+    <a href="/detector" class="button">Go to Detector</a>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>Activity</th>
+            </tr>
+        </thead>
+        <tbody id="log-table-body">
+            <!-- Log entries will be dynamically inserted here -->
+        </tbody>
+    </table>
+
+    <script>
+        async function loadSuspiciousLogs() {
+            try {
+                const response = await fetch('/get-suspicious-logs');
+                if (response.ok) {
+                    const logs = await response.json();
+                    const logTableBody = document.getElementById('log-table-body');
+                    logTableBody.innerHTML = '';
+                    logs.forEach(log => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `<td>${log.time}</td><td>${log.activity}</td>`;
+                        logTableBody.appendChild(row);
+                    });
+                } else {
+                    console.error("Failed to load logs.");
+                }
+            } catch (error) {
+                console.error("Error fetching logs:", error);
+            }
+        }
+
+        window.onload = loadSuspiciousLogs;
+    </script>
+</body>
+</html>

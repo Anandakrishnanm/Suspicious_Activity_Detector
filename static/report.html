@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Suspicious Activity Report</title>
+</head>
+<body>
+    <h1>Suspicious Activity Report</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>Activity</th>
+            </tr>
+        </thead>
+        <tbody id="log-table-body">
+            <!-- Log entries will be loaded here dynamically -->
+        </tbody>
+    </table>
+
+    <script>
+        async function loadSuspiciousLogs() {
+            const response = await fetch('/get-suspicious-logs');
+            if (response.ok) {
+                const logs = await response.json();
+                const logTableBody = document.getElementById('log-table-body');
+                logTableBody.innerHTML = '';
+                logs.forEach(log => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td>${log.time}</td><td>${log.activity}</td>`;
+                    logTableBody.appendChild(row);
+                });
+            } else {
+                console.error("Failed to load logs.");
+            }
+        }
+
+        window.onload = loadSuspiciousLogs;
+    </script>
+</body>
+</html>
